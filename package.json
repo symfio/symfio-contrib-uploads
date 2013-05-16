@@ -1,6 +1,6 @@
 {
   "name": "symfio-contrib-uploads"
-, "version": "0.1.0"
+, "version": "0.1.1"
 , "description": "Handle file uploading."
 , "keywords": ["symfio-plugin", "symfio-contrib", "uploads"]
 , "homepage": "http://symf.io/plugins/contrib-uploads"
