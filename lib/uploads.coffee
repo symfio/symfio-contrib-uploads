@@ -4,10 +4,13 @@ path = require "path"
 
 module.exports = (container, callback) ->
   applicationDirectory = container.get "application directory"
-  uploadsDirectory = path.join applicationDirectory, "uploads"
-
+  
+  publicDirectory = path.join applicationDirectory, "public"
+  publicDirectory = container.get "public directory", publicDirectory
+  
+  uploadsDirectory = path.join publicDirectory, "uploads"
   uploadsDirectory = container.get "uploads directory", uploadsDirectory
-  publicDirectory = container.get "public directory"
+
   logger = container.get "logger"
   app = container.get "app"
 
