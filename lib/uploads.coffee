@@ -1,5 +1,6 @@
 fileupload = require "fileupload"
 path = require "path"
+gm = require "gm"
 
 
 module.exports = (container, callback) ->
@@ -23,7 +24,7 @@ module.exports = (container, callback) ->
   prefix = uploadsDirectory.replace publicDirectory, ""
 
   app.use (req, res, callback) ->
-    return callback() unless req.url is "/uploads"
+    return callback() unless req._parsedUrl.pathname is "/uploads"
     return callback() unless req.method is "POST"
 
     return res.send 400 unless Object.keys(req.body).length is 0
@@ -33,7 +34,31 @@ module.exports = (container, callback) ->
       key = Object.keys(req.body).shift()
       file = req.body[key].shift()
 
-      res.set "Location", "#{prefix}/#{file.path}#{file.basename}"
-      res.send 201
+      callback = ->
+        res.set "Location", "#{prefix}/#{file.path}#{file.basename}"
+        res.send 201
+      
+      if /image/.test file.type
+        query = req.query
+        action = query.action
+        height = parseInt query.height
+        width = parseInt query.width
+        startX = parseInt query.startX
+        startY = parseInt query.startY
+        path = "#{uploadsDirectory}/#{file.path}#{file.basename}"
+        image = gm path
+        if action is "thumb" and width and height
+          image.thumb width, height, path, 100, (err) ->
+            return 500 if err
+            callback()
+        else if action is "resize"
+          image.resize width, height, "^"
+          image.gravity "Center"
+          image.crop width, height, startX, startY
+          image.write path, (err) ->
+            return 500 if err
+            callback()
+      else
+        callback()
 
   callback()

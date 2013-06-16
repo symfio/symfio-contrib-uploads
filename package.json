@@ -22,6 +22,7 @@
   }
 , "dependencies": {
     "fileupload": "~0.2"
+  , "gm": "~1.9"
   }
 , "devDependencies": {
     "symfio": "~1.0"

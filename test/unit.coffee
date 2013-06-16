@@ -14,7 +14,7 @@ describe "contrib-uploads plugin", ->
 
   it "should catch only POST /uploads", wrapper ->
     callback = @sandbox.stub()
-    req = url: "/", method: "GET"
+    req = method: "GET", _parsedUrl: pathname: "/uploads"
 
     plugin @container, ->
 
@@ -24,7 +24,7 @@ describe "contrib-uploads plugin", ->
     @expect(callback).to.have.been.calledOnce
 
   it "should respond with 400 if no file sent", wrapper ->
-    req = url: "/uploads", method: "POST", body: [], files: []
+    req = method: "POST", body: [], files: [], _parsedUrl: pathname: "/uploads"
     res = send: @sandbox.stub()
 
     plugin @container, ->
@@ -48,7 +48,12 @@ describe "contrib-uploads plugin", ->
 
   it "should return filepath with uploads in public", wrapper ->
     file = file: [path: "p/", basename: "f.jpg"]
-    req = url: "/uploads", method: "POST", body: [], files: file
+    req =
+      method: "POST"
+      body: []
+      files: file
+      _parsedUrl:
+        pathname: "/uploads"
     res = send: @sandbox.stub(), set: @sandbox.stub()
 
     @sandbox.stub fileupload, "createFileUpload"
