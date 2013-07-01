@@ -58,6 +58,8 @@ module.exports = (container, callback) ->
           image.write path, (err) ->
             return 500 if err
             callback()
+        else
+          callback()
       else
         callback()
 
