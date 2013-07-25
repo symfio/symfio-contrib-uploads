@@ -37,7 +37,7 @@ module.exports = (container, callback) ->
       callback = ->
         res.set "Location", "#{prefix}/#{file.path}#{file.basename}"
         res.send 201
-      
+
       if /image/.test file.type
         query = req.query
         action = query.action
@@ -49,14 +49,14 @@ module.exports = (container, callback) ->
         image = gm path
         if action is "thumb" and width and height
           image.thumb width, height, path, 100, (err) ->
-            return 500 if err
+            return res.send 500 if err
             callback()
         else if action is "resize"
           image.resize width, height, "^"
           image.gravity "Center"
           image.crop width, height, startX, startY
           image.write path, (err) ->
-            return 500 if err
+            return res.send 500 if err
             callback()
         else
           callback()
