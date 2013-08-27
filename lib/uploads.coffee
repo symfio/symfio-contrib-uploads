@@ -35,7 +35,8 @@ module.exports = (container, callback) ->
       file = req.body[key].shift()
 
       callback = ->
-        res.set "Location", "#{prefix}/#{file.path}#{file.basename}"
+        location = encodeURIComponent "#{prefix}/#{file.path}#{file.basename}"
+        res.set "Location", location
         res.send 201
 
       if /image/.test file.type
